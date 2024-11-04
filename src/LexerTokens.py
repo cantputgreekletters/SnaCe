@@ -23,6 +23,16 @@ class Token:
     def __str__(self) -> str:
         return self.__repr__()
 
+    def TurnToNumber(self) -> int | float | None:
+        if not self._value:
+            return None
+        if self.type == TOKEN_INT:
+            return int(self._value)
+        elif self.type == TOKEN_FLOAT:
+            return float(self._value)
+
+        return None
+
     @property
     def value(self) -> str | None:
         return self._value

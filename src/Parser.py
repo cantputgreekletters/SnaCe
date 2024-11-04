@@ -3,7 +3,7 @@ from ParserNodes import *
 from typing import Self
 
 EXPRESSION_OP = ['+', '-']
-TERM_OP = ['*','/']
+TERM_OP = ['*','/', '^']
 FACTOR_TK = [TOKEN_INT, TOKEN_FLOAT, TOKEN_WORD]
 class BinOp:
     def __init__(self, left_node : Token | Self | None, op : Token | None, right_node : Token | Self | None) -> None:
@@ -44,6 +44,8 @@ class Parser:
         self._current_token = self._tk_list[self._current_idx] if self._current_idx < self._forbidden_idx else None
 
     def _factor(self) -> BinOp | Token | None:
+        if self._error:
+            return
         tk : Token | None = self._current_token
 
         if not tk:
@@ -54,6 +56,8 @@ class Parser:
         return tk
 
     def _term(self) -> BinOp | Token | None:
+        if self._error:
+            return
         left = self._factor()
         while self._current_token != None and self._current_token.value in TERM_OP:
             op : Token = self._current_token
@@ -66,6 +70,8 @@ class Parser:
         return left
 
     def _expression(self) -> BinOp | Token | None:
+        if self._error:
+            return
         left = self._term()
         while self._current_token != None and self._current_token.value in EXPRESSION_OP:
             op : Token = self._current_token
@@ -78,9 +84,12 @@ class Parser:
 
         return left
 
-    def __call__(self) -> BinOp | Token | None: #change type
+    def __call__(self) -> tuple[BinOp | None, str | None]: #change type
         self._Advance()
         re : BinOp | Token | None = self._expression()
-        return re
+        if not isinstance(re, BinOp):
+            self._error = "Did not return BinOp"
+            re = None
+        return re, self._error
 
 #Parser output is wrong

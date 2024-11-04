@@ -59,6 +59,14 @@ class Interpreter:
             return
         return A / B
 
+    def _pow(self, a : Token | None | BinOp, b : Token | None | BinOp):
+        re : None | tuple[int | float, int | float] = self._process_nodes(a,b)
+        if not re:
+            self._error = "Cant pow None-type"
+            return
+        A,B = re
+        return A ** B
+
     def _solve_operator(self, op : BinOp) -> int | float | None:
         if not op:
             return
@@ -72,6 +80,8 @@ class Interpreter:
                 f = self._divide
             case '*':
                 f = self._multiply
+            case '^':
+                f = self._pow
             case _:
                 f = None
         if not f:
@@ -80,5 +90,5 @@ class Interpreter:
         return f(op._left_node, op._right_node)
 
 
-    def __call__(self) -> int | float | None:
-        return self._solve_operator(self._bin_op)
+    def __call__(self) -> tuple[int | float | None, str | None]:
+        return self._solve_operator(self._bin_op), self._error

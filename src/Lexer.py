@@ -3,10 +3,10 @@ from LexerTokens import *
 IGNORE_CHARACTERS : list[str] = [" ", "\t",]
 NUMBERS : set[str] = "1234567890" #type: ignore
 NUMBERS = {i for i in NUMBERS}
-OPERATORS : set[str] = "+-/*=" #type: ignore
+OPERATORS : set[str] = "+-/*=^" #type: ignore
 OPERATORS = {i for i in OPERATORS}
 EOL = ';'
-BANNED_INIT_CHARACTER : set[str] = "!@#$%^&*{}[]:?/`~" #type: ignore
+BANNED_INIT_CHARACTER : set[str] = "!@#$%^&*{}[]:?/`~()" #type: ignore
 BANNED_INIT_CHARACTER = {i for i in BANNED_INIT_CHARACTER}
 BANNED_INIT_CHARACTER ^= OPERATORS ^ NUMBERS ^ {EOL}
 class Lexer:
